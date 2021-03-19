@@ -2,17 +2,17 @@
 
 import matplotlib
 matplotlib.use('Agg')
-from keras.models import model_from_json
+from tensorflow.keras.models import model_from_json
 import os
 import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 import c3d_model
 import sys
-import keras.backend as K
-dim_ordering = K.image_dim_ordering()
-print "[Info] image_dim_order (from default ~/.keras/keras.json)={}".format(
-        dim_ordering)
+import tensorflow.keras.backend as K
+dim_ordering = "tf"
+print("[Info] image_dim_order (from default ~/.keras/keras.json)={}".format(
+        dim_ordering))
 backend = dim_ordering
 
 def diagnose(data, verbose=True, label='input', plots=False, backend='tf'):
@@ -25,8 +25,8 @@ def diagnose(data, verbose=True, label='input', plots=False, backend='tf'):
         min_num_spatial_axes = 10
         max_outputs_to_show = 3
         ndim = data.ndim
-        print "[Info] {}.ndim={}".format(label, ndim)
-        print "[Info] {}.shape={}".format(label, data.shape)
+        print("[Info] {}.ndim={}".format(label, ndim))
+        print("[Info] {}.shape={}".format(label, data.shape))
         for d in range(ndim):
             num_this_dim = data.shape[d]
             if num_this_dim >= min_num_spatial_axes: # check for spatial axes
@@ -73,7 +73,7 @@ def diagnose(data, verbose=True, label='input', plots=False, backend='tf'):
                     if im_max > im_min:
                         im_std = (im - im_min) / (im_max - im_min)
                     else:
-                        print "[Warning] image is constant!"
+                        print("[Warning] image is constant!")
                         im_std = np.zeros_like(im)
                     plt.imshow(im_std)
                     plt.axis('off')
@@ -93,7 +93,7 @@ def diagnose(data, verbose=True, label='input', plots=False, backend='tf'):
                         if im_max > im_min:
                             im_std = (im - im_min) / (im_max - im_min)
                         else:
-                            print "[Warning] image is constant!"
+                            print("[Warning] image is constant!")
                             im_std = np.zeros_like(im)
                         plt.imshow(im_std)
                         plt.axis('off')
@@ -123,7 +123,7 @@ def main():
             backend = 'tf'
         else:
             backend = 'th'
-    print "[Info] Using backend={}".format(backend)
+    print("[Info] Using backend={}".format(backend))
 
     if backend == 'th':
         model_weight_filename = os.path.join(model_dir, 'sports1M_weights_th.h5')
@@ -197,7 +197,7 @@ def main():
         int_model = c3d_model.get_int_model(model=model, layer=layer, backend=backend)
         int_output = int_model.predict_on_batch(np.array([X]))
         int_output = int_output[0, ...]
-        print "[Debug] at layer={}: output.shape={}".format(layer, int_output.shape)
+        print("[Debug] at layer={}: output.shape={}".format(layer, int_output.shape))
         diagnose(int_output,
                  verbose=True,
                  label='{} activation'.format(layer),

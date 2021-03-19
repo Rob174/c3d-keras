@@ -1,7 +1,7 @@
-from keras.models import Sequential
-from keras.layers.core import Dense, Dropout, Flatten
-from keras.layers.convolutional import Convolution3D, MaxPooling3D, ZeroPadding3D
-from keras.optimizers import SGD
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense, Dropout, Flatten
+from tensorflow.keras.layers import Convolution3D, MaxPooling3D, ZeroPadding3D
+from tensorflow.keras.optimizers import SGD
 
 '''
 dim_ordering issue:
@@ -18,37 +18,38 @@ def get_model(summary=False, backend='tf'):
     else:
         input_shape=(3, 16, 112, 112) # c, l, h, w
     model.add(Convolution3D(64, 3, 3, 3, activation='relu',
-                            border_mode='same', name='conv1',
+                            padding='same', name='conv1',
                             input_shape=input_shape))
+    print("------------------------------------")
     model.add(MaxPooling3D(pool_size=(1, 2, 2), strides=(1, 2, 2),
-                           border_mode='valid', name='pool1'))
+                           padding='valid', name='pool1'))
     # 2nd layer group
     model.add(Convolution3D(128, 3, 3, 3, activation='relu',
-                            border_mode='same', name='conv2'))
+                            padding='same', name='conv2'))
     model.add(MaxPooling3D(pool_size=(2, 2, 2), strides=(2, 2, 2),
-                           border_mode='valid', name='pool2'))
+                           padding='valid', name='pool2'))
     # 3rd layer group
     model.add(Convolution3D(256, 3, 3, 3, activation='relu',
-                            border_mode='same', name='conv3a'))
+                            padding='same', name='conv3a'))
     model.add(Convolution3D(256, 3, 3, 3, activation='relu',
-                            border_mode='same', name='conv3b'))
+                            padding='same', name='conv3b'))
     model.add(MaxPooling3D(pool_size=(2, 2, 2), strides=(2, 2, 2),
-                           border_mode='valid', name='pool3'))
+                           padding='valid', name='pool3'))
     # 4th layer group
     model.add(Convolution3D(512, 3, 3, 3, activation='relu',
-                            border_mode='same', name='conv4a'))
+                            padding='same', name='conv4a'))
     model.add(Convolution3D(512, 3, 3, 3, activation='relu',
-                            border_mode='same', name='conv4b'))
+                            padding='same', name='conv4b'))
     model.add(MaxPooling3D(pool_size=(2, 2, 2), strides=(2, 2, 2),
-                           border_mode='valid', name='pool4'))
+                           padding='valid', name='pool4'))
     # 5th layer group
     model.add(Convolution3D(512, 3, 3, 3, activation='relu',
-                            border_mode='same', name='conv5a'))
+                            padding='same', name='conv5a'))
     model.add(Convolution3D(512, 3, 3, 3, activation='relu',
-                            border_mode='same', name='conv5b'))
+                            padding='same', name='conv5b'))
     model.add(ZeroPadding3D(padding=((0, 0), (0, 1), (0, 1)), name='zeropad5'))
     model.add(MaxPooling3D(pool_size=(2, 2, 2), strides=(2, 2, 2),
-                           border_mode='valid', name='pool5'))
+                           padding='valid', name='pool5'))
     model.add(Flatten())
     # FC layers group
     model.add(Dense(4096, activation='relu', name='fc6'))
@@ -56,7 +57,6 @@ def get_model(summary=False, backend='tf'):
     model.add(Dense(4096, activation='relu', name='fc7'))
     model.add(Dropout(.5))
     model.add(Dense(487, activation='softmax', name='fc8'))
-
     if summary:
         print(model.summary())
 
@@ -72,73 +72,73 @@ def get_int_model(model, layer, backend='tf'):
     int_model = Sequential()
 
     int_model.add(Convolution3D(64, 3, 3, 3, activation='relu',
-                            border_mode='same', name='conv1',
+                            padding='same', name='conv1',
                             input_shape=input_shape,
                             weights=model.layers[0].get_weights()))
     if layer == 'conv1':
         return int_model
     int_model.add(MaxPooling3D(pool_size=(1, 2, 2), strides=(1, 2, 2),
-                           border_mode='valid', name='pool1'))
+                           padding='valid', name='pool1'))
     if layer == 'pool1':
         return int_model
 
     # 2nd layer group
     int_model.add(Convolution3D(128, 3, 3, 3, activation='relu',
-                            border_mode='same', name='conv2',
+                            padding='same', name='conv2',
                             weights=model.layers[2].get_weights()))
     if layer == 'conv2':
         return int_model
     int_model.add(MaxPooling3D(pool_size=(2, 2, 2), strides=(2, 2, 2),
-                           border_mode='valid', name='pool2'))
+                           padding='valid', name='pool2'))
     if layer == 'pool2':
         return int_model
 
     # 3rd layer group
     int_model.add(Convolution3D(256, 3, 3, 3, activation='relu',
-                            border_mode='same', name='conv3a',
+                            padding='same', name='conv3a',
                             weights=model.layers[4].get_weights()))
     if layer == 'conv3a':
         return int_model
     int_model.add(Convolution3D(256, 3, 3, 3, activation='relu',
-                            border_mode='same', name='conv3b',
+                            padding='same', name='conv3b',
                             weights=model.layers[5].get_weights()))
     if layer == 'conv3b':
         return int_model
     int_model.add(MaxPooling3D(pool_size=(2, 2, 2), strides=(2, 2, 2),
-                           border_mode='valid', name='pool3'))
+                           padding='valid', name='pool3'))
     if layer == 'pool3':
         return int_model
 
     # 4th layer group
     int_model.add(Convolution3D(512, 3, 3, 3, activation='relu',
-                            border_mode='same', name='conv4a',
+                            padding='same', name='conv4a',
                             weights=model.layers[7].get_weights()))
     if layer == 'conv4a':
         return int_model
     int_model.add(Convolution3D(512, 3, 3, 3, activation='relu',
-                            border_mode='same', name='conv4b',
+                            padding='same', name='conv4b',
                             weights=model.layers[8].get_weights()))
     if layer == 'conv4b':
         return int_model
     int_model.add(MaxPooling3D(pool_size=(2, 2, 2), strides=(2, 2, 2),
-                           border_mode='valid', name='pool4'))
+                           padding='valid', name='pool4'))
     if layer == 'pool4':
         return int_model
 
     # 5th layer group
     int_model.add(Convolution3D(512, 3, 3, 3, activation='relu',
-                            border_mode='same', name='conv5a',
+                            padding='same', name='conv5a',
                             weights=model.layers[10].get_weights()))
     if layer == 'conv5a':
         return int_model
     int_model.add(Convolution3D(512, 3, 3, 3, activation='relu',
-                            border_mode='same', name='conv5b',
+                            padding='same', name='conv5b',
                             weights=model.layers[11].get_weights()))
     if layer == 'conv5b':
         return int_model
     int_model.add(ZeroPadding3D(padding=(0, 1, 1), name='zeropad'))
     int_model.add(MaxPooling3D(pool_size=(2, 2, 2), strides=(2, 2, 2),
-                           border_mode='valid', name='pool5'))
+                           padding='valid', name='pool5'))
     if layer == 'pool5':
         return int_model
 

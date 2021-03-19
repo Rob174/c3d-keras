@@ -21,7 +21,7 @@ else
 fi
 
 # make sure the default keras config (in `~/.keras/keras.json`) has: `tf` image_dim_ordering, and `tensorflow` backend.
-KERASCONF=~/.keras/keras.json
+KERASCONF=./keras.json
 if [ -z "$(grep image_dim_ordering.*tf ${KERASCONF})" ]; then
   echo 'Please set "image_dim_ordering" in ${KERASCONF} to be "tf"'
   exit -1
@@ -32,7 +32,7 @@ if [ -z "$(grep backend.*tensorflow ${KERASCONF})" ]; then
 fi
 
 # finally do the conversion!
-python convert_caffe_model.py
+python  convert_caffe_model.py
 
 # download test video (basketball clip)
 bash download_test_video.sh
