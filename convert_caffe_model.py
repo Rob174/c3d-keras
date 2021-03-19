@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import sys
+
 sys.path.append("C:/Users/robin/Documents/projets/")
 sys.path.append("C:/Users/robin/Documents/projets/c3d-keras")
 import c3d_model
@@ -8,6 +9,8 @@ import caffe_pb2 as caffe
 import numpy as np
 import h5py
 import os
+import tensorflow as tf
+
 
 def reindex(x):
     # https://github.com/fchollet/keras/blob/master/keras/utils/np_utils.py#L90-L115
@@ -28,32 +31,46 @@ def reindex(x):
                 for h in range(H):
                     for w in range(W):
                         y[n, c, l, h, w] = x[n, c,
-                                                   L - l - 1,
-                                                   H - h - 1,
-                                                   W - w - 1]
+                                             L - l - 1,
+                                             H - h - 1,
+                                             W - w - 1]
     return y
+
 
 def convert_dense(w):
     # kernel: (8192, 4096): (512x1x4x4, 4096) -> (1x4x4x512, 4096)
     wo = np.zeros_like(w)
     for i in range(w.shape[1]):
-        wi = np.squeeze(w[:,i])
-        wo[:,i] = np.transpose(np.reshape(wi, (512,4,4)), (1, 2, 0)).flatten()
+        wi = np.squeeze(w[:, i])
+        wo[:, i] = np.transpose(np.reshape(wi, (512, 4, 4)), (1, 2, 0)).flatten()
     return wo
 
-def main():
 
-    #dim_ordering = 'th'
-    #dim_ordering = 'th'
+def main():
+    # dim_ordering = 'th'
+    # dim_ordering = 'th'
     import tensorflow.keras.backend as K
     dim_ordering = "tf"
     print("[Info] image_dim_order (from default ~/.keras/keras.json)={}".format(
-            dim_ordering))
+        dim_ordering))
 
     # get C3D model placeholder
     print(c3d_model.get_model.__code__.co_varnames)
-    model = c3d_model.get_model(summary=True, backend=dim_ordering)
+    gpus = tf.config.list_physical_devices('GPU')
+    if gpus:
+        try:
+            # Currently, memory growth needs to be the same across GPUs
+            for gpu in gpus:
+                tf.config.experimental.set_memory_growth(gpu, True)
+            logical_gpus = tf.config.experimental.list_logical_devices('GPU')
+            print(len(gpus), "Physical GPUs,", len(logical_gpus), "Logical GPUs")
+        except RuntimeError as e:
+            # Memory growth must be set before GPUs have been initialized
+            print(e)
+    print("test1")
 
+    model = c3d_model.get_model(summary=True, backend=dim_ordering)
+    print("test2")
     # input caffe model
     caffe_model_filename = './models/conv3d_deepnetA_sport1m_iter_1900000'
 
@@ -71,8 +88,8 @@ def main():
     p.ParseFromString(open(caffe_model_filename, 'rb').read())
 
     params = []
-    print( "-" * 19)
-    print( "Converting model...")
+    print("-" * 19)
+    print("Converting model...")
 
     # read every conv/fc layer and append to "params" list
     for i in range(len(p.layers)):
@@ -88,7 +105,7 @@ def main():
             layer.blobs[0].length,
             layer.blobs[0].height,
             layer.blobs[0].width,
-            )
+        )
         if 'conv' in layer.name:
             # theano vs tensorflow: https://github.com/fchollet/keras/blob/master/keras/utils/np_utils.py#L90-L115
             if dim_ordering == 'th':
@@ -120,6 +137,7 @@ def main():
     print("-" * 39)
     print("Conversion done!")
     print("-" * 39)
+
 
 if __name__ == '__main__':
     main()
