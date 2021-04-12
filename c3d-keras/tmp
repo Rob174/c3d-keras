@@ -1,0 +1,46 @@
+models/get_weights_and_mean.sh: ligne 2: $'\r' : commande introuvable
+models/get_weights_and_mean.sh: ligne 4: $'\r' : commande introuvable
+: Nom d’hôte incorrect.
+models/get_weights_and_mean.sh: ligne 8: -N : commande introuvable
+models/get_weights_and_mean.sh: ligne 9: --content-disposition : commande introuvable
+models/get_weights_and_mean.sh: ligne 10: --no-check-certificate : commande introuvable
+models/get_weights_and_mean.sh: ligne 11: http://vlg.cs.dartmouth.edu/c3d/conv3d_deepnetA_sport1m_iter_1900000: Aucun fichier ou dossier de ce type
+: Aucun fichier ou dossier de ce type 12: --directory-prefix=/home/mjacques/c3d-keras/models
+models/get_weights_and_mean.sh: ligne 13: $'\r' : commande introuvable
+: No such file or directory..bz2home/mjacques/c3d-keras/models
+models/get_weights_and_mean.sh: ligne 18: $'\r' : commande introuvable
+sports1m/get_labels.sh: ligne 2: $'\r' : commande introuvable
+sports1m/get_labels.sh: ligne 4: $'\r' : commande introuvable
+: Nom d’hôte incorrect.
+sports1m/get_labels.sh: ligne 8: -N : commande introuvable
+sports1m/get_labels.sh: ligne 9: https://raw.githubusercontent.com/gtoderici/sports-1m-dataset/master/labels.txt: Aucun fichier ou dossier de ce type
+: Aucun fichier ou dossier de ce typeirectory-prefix=/home/mjacques/c3d-keras/sports1m
+sports1m/get_labels.sh: ligne 11: $'\r' : commande introuvable
+--2021-03-25 10:35:20--  https://raw.githubusercontent.com/facebook/C3D/master/C3D-v1.0/src/caffe/proto/caffe.proto
+Résolution de raw.githubusercontent.com (raw.githubusercontent.com)… 185.199.110.133, 185.199.109.133, 185.199.108.133, ...
+Connexion à raw.githubusercontent.com (raw.githubusercontent.com)|185.199.110.133|:443… connecté.
+requête HTTP transmise, en attente de la réponse… 200 OK
+Taille : 21591 (21K) [text/plain]
+Enregistre : «caffe.proto»
+
+caffe.proto                                   100%[=================================================================================================>]  21,08K  --.-KB/s    ds 0s
+
+En-tête de dernière modification manquant — horodatage arrêté.
+2021-03-25 10:35:20 (55,0 MB/s) - «caffe.proto» enregistré [21591/21591]
+
+[libprotobuf WARNING google/protobuf/compiler/parser.cc:648] No syntax specified for the proto file: caffe.proto. Please use 'syntax = "proto2";' or 'syntax = "proto3";' to specify a syntax version. (Defaulted to proto2 syntax.)
+Traceback (most recent call last):
+  File "convert_caffe_model.py", line 143, in <module>
+    main()
+  File "convert_caffe_model.py", line 88, in main
+    p.ParseFromString(open(caffe_model_filename, 'rb').read())
+FileNotFoundError: [Errno 2] No such file or directory: './models/conv3d_deepnetA_sport1m_iter_1900000'
+download_test_video.sh: ligne 2: $'\r' : commande introuvable
+download_test_video.sh: ligne 3: youtube-dl : commande introuvable
+download_test_video.sh: ligne 4: -f : commande introuvable
+download_test_video.sh: ligne 5: -o : commande introuvable
+: Aucun fichier ou dossier de ce types://www.youtube.com/watch?v=dM06AMFLsrc
+Traceback (most recent call last):
+  File "test_model.py", line 7, in <module>
+    import cv2
+ModuleNotFoundError: No module named 'cv2'
